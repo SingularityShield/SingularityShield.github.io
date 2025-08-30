@@ -98,7 +98,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:https://onedrive.live.com/?view=8&photosData=%2Fphoto%2F841C16D74E5BA51C%21sd566ad0698444bd3966ba20bf3558233%3Fview%3Dall 
+avatar: C:\Projects\blog_github\SingularityShield.github.io\logo.png
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
