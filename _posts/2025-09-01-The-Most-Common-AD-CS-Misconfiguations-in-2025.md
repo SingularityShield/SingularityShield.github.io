@@ -1,5 +1,5 @@
 ---
-title: "The Most Common AD CS Misconfiguations in 2025"
+title: "The Most Common AD CS Misconfigurations in 2025"
 date: 2025-09-01 00:00:00 +0700
 categories: [ADCS]
 tags: [Red-Teaming]
