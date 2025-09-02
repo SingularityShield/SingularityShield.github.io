@@ -7,13 +7,13 @@ tags: [Red-Teaming]
 
 ## A Pentester's View
 
-Hey there, I'm Vince, a penetration tester with years of experience diving into Active Directory environments, uncovering vulnerabilities that can compromise entire networks. One client’s reaction after a particularly tough pentest still sticks with me: "Certificates are supposed to secure things, not hand out skeleton keys." That sentiment rings true—research from firms like SpecterOps and others highlights that Active Directory Certificate Services (AD CS) misconfigurations remain a pervasive problem in enterprise settings, often paving the way for full domain compromise.
+Hey there, I'm Vince, a penetration tester with years of experience diving into Active Directory environments, uncovering vulnerabilities that can compromise entire networks. One client’s reaction after a particularly tough pentest still sticks with me: "Certificates are supposed to secure things, not hand out skeleton keys." That sentiment rings true. Research from firms like SpecterOps and others highlights that Active Directory Certificate Services (AD CS) misconfigurations remain a pervasive problem in enterprise settings, often paving the way for full domain compromise.
 
 In my hands-on work, I’ve found that ESC1 and ESC8 are the most frequent offenders, popping up in nearly every engagement I’ve tackled. Trailing behind are ESC4, ESC6, ESC2, and ESC3, each with its own potential to cause havoc. Let’s break these down as if I’m debriefing you after a red team operation, sharing the real-world weaknesses and how attackers turn them into opportunities for exploitation.
 
 ### ESC1: Enrollee Supplies Subject Alternative Name (SAN)
 
-ESC1 is incredibly common. It’s when a certificate template lets low-privileged users enroll and specify their own Subject Alternative Name (SAN)—the identity field in the cert. The template also needs client authentication capabilities, like for smart card logon or general auth. Why’s this bad? An attacker can request a certificate with a domain admin’s SAN and authenticate as them via Kerberos or other protocols, no password needed. It’s a silent escalator to high privileges, often missed because it looks benign until exploited.
+ESC1 is incredibly common. It’s when a certificate template lets low-privileged users enroll and specify their own Subject Alternative Name (SAN) on the identity field in the cert. The template also needs client authentication capabilities, like for smart card logon or general auth. Why’s this bad? An attacker can request a certificate with a domain admin’s SAN and authenticate as them via Kerberos or other protocols, no password needed. It’s a silent escalator to high privileges, often missed because it looks benign until exploited.
 
 Exploit Code Snippet:
 ```
@@ -133,7 +133,7 @@ nxc smb DC_IP -u "DOMAIN_ADMIN" -H "NTLM_HASH"
 
 ### ESC4: Write Permissions on Certificate Template
 
-ESC4 is less frequent but still a regular find in environments with loose access controls. It’s when a low-privileged user has write permissions on a certificate template, letting them modify its settings—like enabling SAN control or adding client auth EKUs. This turns a safe template into an ESC1-style attack vector. It’s dangerous because it’s like handing over the PKI rulebook to rewrite, opening the door to privilege escalation.
+ESC4 is less frequent but still a regular find in environments with loose access controls. It’s when a low-privileged user has write permissions on a certificate template, letting them modify its settings like enabling SAN control or adding client auth EKUs. This turns a safe template into an ESC1-style attack vector. It’s dangerous because it’s like handing over the PKI rulebook to rewrite, opening the door to privilege escalation.
 
 Exploit Code Snippet:
 ```
@@ -200,7 +200,7 @@ certipy auth -pfx ADMIN.pfx -dc-ip DC_IP
 5.	Act fast: CA logs might flag this, so escalate quickly.
 
 ### ESC2: Overly Permissive EKUs (Any Purpose/SubCA)
-ESC2 is sneaky—it’s when templates have “Any Purpose” or SubCA EKUs that allow client authentication, and low-priv users can enroll while supplying the subject. Unlike ESC1, the EKU isn’t explicitly client auth, but the cert still works for it. This matters because it enables impersonation without obvious red flags in the template config.
+ESC2 is sneaky; it’s when templates have “Any Purpose” or SubCA EKUs that allow client authentication, and low-priv users can enroll while supplying the subject. Unlike ESC1, the EKU isn’t explicitly client auth, but the cert still works for it. This matters because it enables impersonation without obvious red flags in the template config.
 
 Exploit Code Snippet:
 ```
